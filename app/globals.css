@@ -1,26 +1,114 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-canvas: #eef0ea;
+  --color-canvas-raised: #f8f8f3;
+  --color-ink: #1e2a2f;
+  --color-ink-soft: #55635f;
+  --color-accent: #7a4356;
+  --color-accent-soft: #c79aa4;
+  --color-sage: #5c7a63;
+  /* Texto sobre fondos salvia tintados: la salvia pura no llega a 4.5:1 */
+  --color-sage-ink: #3d5a44;
+  --color-border: #d6d6cc;
+  /* Borde de controles: ≥3:1 sobre la superficie elevada */
+  --color-border-strong: #8b8f86;
+  /* Error: terracota, distinto del vino de marca para que no se confundan */
+  --color-danger: #a13d2d;
+  --color-danger-soft: #f4e3dc;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-canvas: var(--color-canvas);
+  --color-canvas-raised: var(--color-canvas-raised);
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-accent: var(--color-accent);
+  --color-accent-soft: var(--color-accent-soft);
+  --color-sage: var(--color-sage);
+  --color-sage-ink: var(--color-sage-ink);
+  --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
+  --color-danger: var(--color-danger);
+  --color-danger-soft: var(--color-danger-soft);
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-inter);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Un único anillo de foco para todo lo interactivo, enlaces incluidos.
+   En @layer base para que las utilidades (p. ej. -outline-offset-1) puedan ajustarlo. */
+@layer base {
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+}
+
+/* Superficies que no dibujamos a mano, pero también llevan el diseño */
+::selection {
+  background-color: var(--color-accent-soft);
+  color: var(--color-ink);
+}
+
+::placeholder {
+  color: var(--color-ink-soft);
+  opacity: 1;
+}
+
+input {
+  caret-color: var(--color-accent);
+}
+
+* {
+  scrollbar-color: var(--color-ink-soft) transparent;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 999px;
+  border: 2px solid var(--color-canvas);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-ink-soft);
+}
+
+.font-display {
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+/* Un único momento de movimiento con autoría, reutilizado en todas las pantallas */
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-entrar {
+  animation: entrar 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-entrar {
+    animation: none;
+  }
 }
